@@ -10,7 +10,8 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
 
             'keys' => [
 
-                'id' => 'primary'
+                'id' => 'primary',
+                'alias' => 'index'
             ]
         ]
     ],
@@ -112,8 +113,15 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
 
             'eval' => [
 
+                'rgxp' => 'folderalias',
                 'tl_class' => 'w50',
+                'doNotCopy' => true,
                 'maxlength' => 32
+            ],
+
+            'save_callback' => [
+
+                [ 'delivery.datacontainer.deliveries', 'generateAlias' ]
             ],
 
             'exclude' => true,
