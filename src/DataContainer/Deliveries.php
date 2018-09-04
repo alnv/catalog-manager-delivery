@@ -88,4 +88,30 @@ class Deliveries {
 
         return [ 'ASC' => &$GLOBALS['TL_LANG']['MSC']['CATALOG_MANAGER']['asc'], 'DESC' => &$GLOBALS['TL_LANG']['MSC']['CATALOG_MANAGER']['desc'] ];
     }
+
+
+    public function generateAlias( $strValue, \DataContainer $objDataContainer ) {
+
+        $blnAutoAlias = false;
+        $objDatabase = \Database::getInstance();
+
+        if ( $strValue == '' ) {
+
+            $strValue = \System::getContainer()->get( 'contao.slug.generator' )->generate( \StringUtil::prepareSlug( $objDataContainer->activeRecord->name ) );
+        }
+
+        $objAlias = $objDatabase->prepare( "SELECT id FROM tl_deliveries WHERE alias = ? AND id != ?" )->execute( $strValue, $objDataContainer->id );
+
+        if ( $objAlias->numRows ) {
+
+            if ( !$blnAutoAlias ) {
+
+                throw new \Exception( sprintf( $GLOBALS['TL_LANG']['ERR']['aliasExists'], $strValue ) );
+            }
+
+            $strValue .= '-' . $objDataContainer->id;
+        }
+
+        return $strValue;
+    }
 }
