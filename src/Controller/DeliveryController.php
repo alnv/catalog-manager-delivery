@@ -3,11 +3,12 @@
 namespace CatalogManager\DeliveryBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use CatalogManager\DeliveryBundle\Helpers\Help as Help;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
+use CatalogManager\DeliveryBundle\Helpers\Help as Help;
+use CatalogManager\DeliveryBundle\Helpers\View as View;
 
 /**
  *
@@ -35,8 +36,8 @@ class DeliveryController extends Controller {
         }
 
         $arrDelivery = Help::parseDelivery( $objDelivery->row() );
-
-        //
+        $objView = new View( $arrDelivery );
+        $objView->getView();
 
         header('Content-Type: application/json');
         echo json_encode( $arrDelivery );
