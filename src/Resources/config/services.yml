@@ -1,0 +1,4 @@
+services:
+    delivery.datacontainer.deliveries:
+        class: CatalogManager\DeliveryBundle\DataContainer\Deliveries
+        public: true
