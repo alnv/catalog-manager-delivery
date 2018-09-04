@@ -20,6 +20,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface {
 
             BundleConfig::create('CatalogManager\DeliveryBundle\CatalogManagerDeliveryBundle')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle'])
+                ->setLoadAfter(['catalog-manager'])
                 ->setReplace(['catalog-manager-delivery']),
         ];
     }
