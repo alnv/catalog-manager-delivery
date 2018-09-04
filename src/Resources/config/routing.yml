@@ -1,0 +1,3 @@
+delivery:
+  resource: "@CatalogManagerDeliveryBundle/Controller"
+  type: annotation
