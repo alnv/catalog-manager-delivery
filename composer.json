@@ -1,0 +1,49 @@
+{
+  "name": "alnv/catalog-manager-delivery",
+  "type": "contao-bundle",
+  "description": "Catalog Manager REST-API Builder.",
+
+  "authors": [
+    {
+      "name": "Alexander Naumov"
+    }
+  ],
+
+  "autoload": {
+
+    "psr-4": {
+
+      "CatalogManager\\DeliveryBundle\\": "src/"
+    },
+
+    "classmap": [
+
+      "src/Resources/contao/"
+    ],
+
+    "exclude-from-classmap": [
+
+      "src/Resources/contao/config/",
+      "src/Resources/contao/dca/",
+      "src/Resources/contao/languages/",
+      "src/Resources/contao/templates/"
+    ]
+  },
+
+  "require": {
+
+    "php": "^7.1",
+    "symfony/framework-bundle": "3.4.* || 4.1.*",
+    "contao/core-bundle": "^4.4"
+  },
+
+  "config": {
+
+    "preferred-install": "dist"
+  },
+
+  "extra": {
+
+    "contao-manager-plugin": "CatalogManager\\DeliveryBundle\\ContaoManager\\Plugin"
+  }
+}
