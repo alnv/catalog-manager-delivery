@@ -5,6 +5,7 @@ namespace CatalogManager\DeliveryBundle\DataContainer;
 use CatalogManager\CatalogFieldBuilder as CatalogFieldBuilder;
 use CatalogManager\Toolkit as Toolkit;
 
+
 class Deliveries {
 
 
