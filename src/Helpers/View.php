@@ -112,7 +112,6 @@ class View {
             $arrReturn[] = $arrEntity;
         }
 
-        // var_dump($arrReturn);
-        // exit;
+        return $arrReturn;
     }
 }
