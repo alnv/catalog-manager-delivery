@@ -26,7 +26,7 @@ class DeliveryController extends Controller {
 
         $this->container->get( 'contao.framework' )->initialize();
 
-        $arrReturn = [];
+        $arrData = [];
         $objDatabase = \Database::getInstance();
         $objDelivery = $objDatabase->prepare( 'SELECT * FROM tl_deliveries WHERE alias = ? OR id = ?' )->execute( $alias, (int) $alias );
 
@@ -37,10 +37,21 @@ class DeliveryController extends Controller {
 
         $arrDelivery = Help::parseDelivery( $objDelivery->row() );
         $objView = new View( $arrDelivery );
-        $objView->getView();
+
+        $arrData['data'] = $objView->getView();
+        $arrData['globals'] = $arrDelivery['globals'];
+
+        if ( $arrDelivery['type'] == 'template' ) {
+
+            $strTemplate = $arrDelivery['template'] ? $arrDelivery['template'] : 'delivery_example';
+            $objTemplate = new \FrontendTemplate( $strTemplate );
+            $objTemplate->setData( $arrData );
+
+            $arrData['template'] = $objTemplate->parse();
+        }
 
         header('Content-Type: application/json');
-        echo json_encode( $arrDelivery );
+        echo json_encode( $arrData );
         exit;
     }
 }
