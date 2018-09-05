@@ -205,6 +205,7 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
 
             'label' => &$GLOBALS['TL_LANG']['tl_deliveries']['return'],
             'inputType' => 'radio',
+            'default' => 'json',
 
             'eval' => [
 
@@ -231,6 +232,7 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
 
             'label' => &$GLOBALS['TL_LANG']['tl_deliveries']['template'],
             'inputType' => 'select',
+            'default' => 'delivery_example',
 
             'eval' => [
 
