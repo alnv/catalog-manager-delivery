@@ -1,0 +1,37 @@
+(function () {
+
+    'use strict';
+
+    var objTarget = document.getElementById('<?= $this->target ?>');
+
+    if ( objTarget && typeof objTarget !== 'undefined' ) {
+    	
+    	var objXHR = new XMLHttpRequest();
+    	
+    	objXHR.open( 'GET', '<?= $this->host ?>/delivery-api/<?= $this->alias ?>' );
+    	objXHR.onload = function() {
+    		
+    		if ( objXHR.status === 200 ) {
+    			
+    			var objResult = JSON.parse( objXHR.responseText );
+    			
+    			if ( objResult && typeof objResult !== 'undefined' ) {
+    				
+    				if ( objResult.template ) {
+    					
+    					objTarget.innerHTML = objResult.template;
+    				}
+    			}
+    		}
+    		
+    		else {
+    			
+    			//
+    		}
+    		
+    	};
+    	
+    	objXHR.send();
+    }
+
+})();

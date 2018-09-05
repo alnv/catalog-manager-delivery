@@ -34,4 +34,18 @@ class Help {
 
         return $arrReturn;
     }
+
+
+    public static function getDelivery( $alias ) {
+
+        $objDatabase = \Database::getInstance();
+        $objDelivery = $objDatabase->prepare( 'SELECT * FROM tl_deliveries WHERE alias = ? OR id = ?' )->execute( $alias, (int) $alias );
+
+        if ( !$objDelivery->numRows ) {
+
+            throw new \CoreBundle\Exception\PageNotFoundException( 'Page not found: ' . \Environment::get('uri') );
+        }
+
+        return static::parseDelivery( $objDelivery->row() );
+    }
 }

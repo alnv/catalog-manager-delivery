@@ -27,15 +27,7 @@ class DeliveryController extends Controller {
         $this->container->get( 'contao.framework' )->initialize();
 
         $arrData = [];
-        $objDatabase = \Database::getInstance();
-        $objDelivery = $objDatabase->prepare( 'SELECT * FROM tl_deliveries WHERE alias = ? OR id = ?' )->execute( $alias, (int) $alias );
-
-        if ( !$objDelivery->numRows ) {
-
-            throw new \CoreBundle\Exception\PageNotFoundException( 'Page not found: ' . \Environment::get('uri') );
-        }
-
-        $arrDelivery = Help::parseDelivery( $objDelivery->row() );
+        $arrDelivery = Help::getDelivery( $alias );
         $objView = new View( $arrDelivery );
 
         $arrData['data'] = $objView->getView();
@@ -52,6 +44,29 @@ class DeliveryController extends Controller {
 
         header('Content-Type: application/json');
         echo json_encode( $arrData );
+        exit;
+    }
+
+    /**
+     *
+     * @Route("/js/{alias}.js", name="javascript")
+     * @Method({"GET"})
+     */
+    public function javascript( $alias ) {
+
+        $this->container->get( 'contao.framework' )->initialize();
+
+        $arrDelivery = Help::getDelivery( $alias );
+
+        $arrDelivery['alias'] = $alias;
+        $arrDelivery['target'] = 'deals-wrapper';
+        $arrDelivery['host'] = 'http://catalog-manager-demo.host';
+
+        $objTemplate = new \FrontendTemplate( 'js_delivery' );
+        $objTemplate->setData( $arrDelivery );
+
+        header('Content-Type: application/javascript');
+        echo $objTemplate->parse();
         exit;
     }
 }
