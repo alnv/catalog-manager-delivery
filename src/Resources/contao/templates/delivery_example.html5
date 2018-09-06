@@ -1,1 +1,7 @@
-<!-- empty template -->
+<?php if ( is_array( $this->data ) && !empty( $this->data ) ): ?>
+	<ul>
+	<?php foreach ( $this->data as $arrData ): ?>
+		<li><?= $arrData['title'] ?></li>
+	<?php endforeach; ?>
+	</ul>
+<?php endif; ?>
