@@ -30,8 +30,9 @@ class DeliveryController extends Controller {
         $arrDelivery = Help::getDelivery( $alias );
         $objView = new View( $arrDelivery );
 
-        $arrData['data'] = $objView->getView();
+        $arrData['pagination'] = $objView->getPagination();
         $arrData['globals'] = $arrDelivery['globals'];
+        $arrData['data'] = $objView->getView();
 
         if ( $arrDelivery['type'] == 'template' ) {
 
@@ -57,11 +58,6 @@ class DeliveryController extends Controller {
         $this->container->get( 'contao.framework' )->initialize();
 
         $arrDelivery = Help::getDelivery( $alias );
-
-        $arrDelivery['alias'] = $alias;
-        $arrDelivery['target'] = 'deals-wrapper';
-        $arrDelivery['host'] = 'http://catalog-manager-demo.host';
-
         $objTemplate = new \FrontendTemplate( 'js_delivery' );
         $objTemplate->setData( $arrDelivery );
 
