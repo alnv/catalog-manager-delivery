@@ -10,6 +10,7 @@ use CatalogManager\Toolkit as Toolkit;
 class View {
 
 
+    protected $intPerPage = 5;
     protected $arrFields = [];
     protected $arrQuery = [];
 
@@ -17,6 +18,7 @@ class View {
     public function __construct( $arrDelivery ) {
 
         $this->arrFields = $arrDelivery['fields'];
+        $this->intPerPage = $arrDelivery['perPage'];
 
         $this->arrQuery = [
 
@@ -101,25 +103,24 @@ class View {
 
         $intTotal = $objTotal->numRows;
         $intLimit = $intTotal;
-        $intPerPage = 5;
         $intOffset = 0;
 
-        if ( $intPerPage > 0 ) {
+        if ( $this->intPerPage > 0 ) {
 
             $intPage = ( \Input::get( '_page' ) !== null ) ? \Input::get( _page ) : 1;
 
-            if ( $intPage < 1 || $intPage > max( ceil( $intTotal / $intPerPage ), 1 ) ) {
+            if ( $intPage < 1 || $intPage > max( ceil( $intTotal / $this->intPerPage ), 1 ) ) {
 
                 throw new \CoreBundle\Exception\PageNotFoundException( 'Page not found: ' . \Environment::get('uri') );
             }
 
-            $intOffset = ( $intPage - 1 ) * $intPerPage;
-            $intLimit = min( $intPerPage + $intOffset, $intTotal );
+            $intOffset = ( $intPage - 1 ) * $this->intPerPage;
+            $intLimit = min( $this->intPerPage + $intOffset, $intTotal );
         }
 
         $this->arrQuery['pagination'] = [
 
-            'limit' => $intPerPage,
+            'limit' => $this->intPerPage,
             'offset' => $intOffset
         ];
 
@@ -149,17 +150,16 @@ class View {
 
         $intTotal = $objTotal->numRows;
         $intLimit = $intTotal;
-        $intPerPage = 5;
         $intOffset = 0;
 
-        if ( $intPerPage > 0 ) {
+        if ( $this->intPerPage > 0 ) {
 
             $objTemplate = new \FrontendTemplate( 'pagination_delivery' );
             $intPage = ( \Input::get( '_page' ) !== null ) ? \Input::get( _page ) : 1;
-            $intOffset = ( $intPage - 1 ) * $intPerPage;
-            $intLimit = min( $intPerPage + $intOffset, $intTotal );
+            $intOffset = ( $intPage - 1 ) * $this->intPerPage;
+            $intLimit = min( $this->intPerPage + $intOffset, $intTotal );
 
-            $objPagination = new \Pagination( $intTotal, $intPerPage, \Config::get( 'maxPaginationLinks' ), '_page', $objTemplate, true );
+            $objPagination = new \Pagination( $intTotal, $this->intPerPage, \Config::get( 'maxPaginationLinks' ), '_page', $objTemplate, true );
 
             return $objPagination->generate();
         }

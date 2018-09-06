@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
     'palettes' => [
 
         '__selector__' => [ 'return' ],
-        'default' => '{general_settings},name,alias,target;{data_settings},table,match,order;{return_settings},return;{expert_settings},globals',
+        'default' => '{general_settings},name,alias,target;{data_settings},table,perPage,match,order;{return_settings},return;{expert_settings},globals',
     ],
 
     'subpalettes' => [
@@ -142,6 +142,24 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
 
             'exclude' => true,
             'sql' => "varchar(32) NOT NULL default ''"
+        ],
+
+        'perPage' => [
+
+            'label' => &$GLOBALS['TL_LANG']['tl_deliveries']['perPage'],
+            'inputType' => 'text',
+            'default' => 0,
+
+            'eval' => [
+
+                'minval' => 0,
+                'maxval' => 100,
+                'tl_class' => 'w50',
+                'mandatory' => true
+            ],
+
+            'exclude' => true,
+            'sql' => "tinyint(1) unsigned NOT NULL default '0'"
         ],
 
         'table' => [

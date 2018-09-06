@@ -78,7 +78,7 @@
 						
 						if ( strHref ) {
 						
-							callDelivery( false, strHref );
+							callDelivery( true, strHref );
 						}
 						
 						return false;

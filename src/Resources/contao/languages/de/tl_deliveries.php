@@ -13,6 +13,7 @@ $GLOBALS['TL_LANG']['tl_deliveries']['name'] = [ 'Bezeichnung', 'Bitte geben Sie
 $GLOBALS['TL_LANG']['tl_deliveries']['order'] = [ 'Sortieren', 'Hier können Sie Ihre Auswahl sortieren.' ];
 $GLOBALS['TL_LANG']['tl_deliveries']['return'] = [ 'Rückgabe', 'Bitte wählen Sie einen Rückgabe-Typ aus.' ];
 $GLOBALS['TL_LANG']['tl_deliveries']['target'] = [ '#id Selector', 'Bitte geben Sie einen #id Selector ein.' ];
+$GLOBALS['TL_LANG']['tl_deliveries']['perPage'] = [ 'Datensätze pro Seite', 'Die Anzahl an Datensätzen pro Seite.' ];
 $GLOBALS['TL_LANG']['tl_deliveries']['globals'] = [ 'Globale Variablen', 'Hier können Sie globale Variablen für die Stylesheets des Theme definieren (z.B. $rot -> c00 oder $abstand -> 12px).' ];
 
 $GLOBALS['TL_LANG']['tl_deliveries']['new'] = [ 'Erstellen', '' ];

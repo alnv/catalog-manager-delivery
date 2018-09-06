@@ -23,6 +23,7 @@ class Help {
             'alias' => $arrDelivery['alias'],
             'target' => $arrDelivery['target'],
             'template' => $arrDelivery['template'],
+            'perPage' => (int) $arrDelivery['perPage'],
             'order' => \StringUtil::deserialize( $arrDelivery['order'], true ),
             'globals' => \StringUtil::deserialize( $arrDelivery['globals'], true )
         ];
