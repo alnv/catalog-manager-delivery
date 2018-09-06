@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
     'palettes' => [
 
         '__selector__' => [ 'return' ],
-        'default' => '{general_settings},name,alias;{data_settings},table,match,order;{return_settings},return;{expert_settings},globals',
+        'default' => '{general_settings},name,alias,target;{data_settings},table,match,order;{return_settings},return;{expert_settings},globals',
     ],
 
     'subpalettes' => [
@@ -122,6 +122,22 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
             'save_callback' => [
 
                 [ 'delivery.datacontainer.deliveries', 'generateAlias' ]
+            ],
+
+            'exclude' => true,
+            'sql' => "varchar(32) NOT NULL default ''"
+        ],
+
+        'target' => [
+
+            'label' => &$GLOBALS['TL_LANG']['tl_deliveries']['target'],
+            'inputType' => 'text',
+
+            'eval' => [
+
+                'tl_class' => 'w50',
+                'mandatory' => true,
+                'maxlength' => 32
             ],
 
             'exclude' => true,
