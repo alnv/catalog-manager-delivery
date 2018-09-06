@@ -20,6 +20,8 @@ class Help {
             'name' => $arrDelivery['name'],
             'type' => $arrDelivery['return'],
             'table' => $arrDelivery['table'],
+            'alias' => $arrDelivery['alias'],
+            'target' => $arrDelivery['target'],
             'template' => $arrDelivery['template'],
             'order' => \StringUtil::deserialize( $arrDelivery['order'], true ),
             'globals' => \StringUtil::deserialize( $arrDelivery['globals'], true )
