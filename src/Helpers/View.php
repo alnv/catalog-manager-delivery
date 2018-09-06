@@ -97,9 +97,35 @@ class View {
 
         $arrReturn = [];
         $objSQLBuilder = new SQLQueryBuilder();
+        $objTotal = $objSQLBuilder->execute( $this->arrQuery );
+
+        $intTotal = $objTotal->numRows;
+        $intLimit = $intTotal;
+        $intPerPage = 5;
+        $intOffset = 0;
+
+        if ( $intPerPage > 0 ) {
+
+            $intPage = ( \Input::get( '_page' ) !== null ) ? \Input::get( _page ) : 1;
+
+            if ( $intPage < 1 || $intPage > max( ceil( $intTotal / $intPerPage ), 1 ) ) {
+
+                throw new \CoreBundle\Exception\PageNotFoundException( 'Page not found: ' . \Environment::get('uri') );
+            }
+
+            $intOffset = ( $intPage - 1 ) * $intPerPage;
+            $intLimit = min( $intPerPage + $intOffset, $intTotal );
+        }
+
+        $this->arrQuery['pagination'] = [
+
+            'limit' => $intPerPage,
+            'offset' => $intOffset
+        ];
+
         $objEntities = $objSQLBuilder->execute( $this->arrQuery );
 
-        if ( !$objEntities-numRows ) {
+        if ( !$objEntities->numRows ) {
 
             return $arrReturn;
         }
@@ -113,5 +139,31 @@ class View {
         }
 
         return $arrReturn;
+    }
+
+
+    public function getPagination() {
+
+        $objSQLBuilder = new SQLQueryBuilder();
+        $objTotal = $objSQLBuilder->execute( $this->arrQuery );
+
+        $intTotal = $objTotal->numRows;
+        $intLimit = $intTotal;
+        $intPerPage = 5;
+        $intOffset = 0;
+
+        if ( $intPerPage > 0 ) {
+
+            $objTemplate = new \FrontendTemplate( 'pagination_delivery' );
+            $intPage = ( \Input::get( '_page' ) !== null ) ? \Input::get( _page ) : 1;
+            $intOffset = ( $intPage - 1 ) * $intPerPage;
+            $intLimit = min( $intPerPage + $intOffset, $intTotal );
+
+            $objPagination = new \Pagination( $intTotal, $intPerPage, \Config::get( 'maxPaginationLinks' ), '_page', $objTemplate, true );
+
+            return $objPagination->generate();
+        }
+
+        return '';
     }
 }
