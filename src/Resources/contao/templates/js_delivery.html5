@@ -1,17 +1,32 @@
 (function () {
 
     'use strict';
-
-    var objTarget = document.getElementById('<?= $this->target ?>');
-
-    if ( objTarget && typeof objTarget !== 'undefined' ) {
+    
+    var objPagination = document.getElementById( '<?= $this->target ?>-pagination' );
+    var strAction = '<?= \Environment::get('url') ?>/delivery-api/<?= $this->alias ?>';
+    var objTarget = document.getElementById( '<?= $this->target ?>' );
+    var strMethod = 'GET';
+    
+    function callDelivery( blnPagination = false, strHref = '' ) {
     	
     	var objXHR = new XMLHttpRequest();
     	
-    	objXHR.open( 'GET', '<?= $this->host ?>/delivery-api/<?= $this->alias ?>' );
+    	if ( strHref ) {
+    		
+    		strAction = strHref;
+    	}
+    	
+    	else {
+    		
+    		strAction = strAction + '?_page=1';
+    	}
+    	
+    	objXHR.open( strMethod, strAction );
     	objXHR.onload = function() {
     		
     		if ( objXHR.status === 200 ) {
+    			
+    			if ( !objXHR.responseText ) return null;
     			
     			var objResult = JSON.parse( objXHR.responseText );
     			
@@ -21,6 +36,15 @@
     					
     					objTarget.innerHTML = objResult.template;
     				}
+    				
+    				if ( objPagination && typeof objPagination !== 'undefined' ) {
+    					
+    					if ( objResult.pagination && blnPagination ) {
+    					
+    						objPagination.innerHTML = objResult.pagination;
+    						iniPagination();
+    					}
+    				}
     			}
     		}
     		
@@ -28,10 +52,43 @@
     			
     			//
     		}
-    		
-    	};
-    	
+    	}
     	objXHR.send();
     }
+    
+    function iniPagination() {
+    
+    	var objPagination = document.getElementById( '<?= $this->target ?>-pagination' );
+    	
+    	if ( objPagination && typeof objPagination !== 'undefined' ) {
+    		
+    		var arrList = objPagination.querySelectorAll( 'a' );
+    		
+    		if ( typeof arrList !== 'undefined' && arrList.length ) {
+    			
+    			for ( var i = 0; i < arrList.length; i++ ) {
+    				
+    				var objItem = arrList[i];
+    				
+    				objItem.addEventListener( 'click', function( objTarget ) {
+    				
+    					objTarget.preventDefault();
+    					
+						var strHref = objTarget.target.href;
+						
+						if ( strHref ) {
+						
+							callDelivery( false, strHref );
+						}
+						
+						return false;
+						
+    				}, false );
+    			}
+    		} 
+    	}
+    }
+
+	callDelivery( true );
 
 })();
