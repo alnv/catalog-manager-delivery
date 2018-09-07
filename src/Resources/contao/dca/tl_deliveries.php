@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_deliveries'] = [
             ],
 
             'exclude' => true,
-            'sql' => "tinyint(1) unsigned NOT NULL default '0'"
+            'sql' => "smallint(5) unsigned NOT NULL default '0'"
         ],
 
         'table' => [
