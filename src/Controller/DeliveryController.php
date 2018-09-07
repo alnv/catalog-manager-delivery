@@ -43,7 +43,8 @@ class DeliveryController extends Controller {
             $arrData['template'] = $objTemplate->parse();
         }
 
-        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: *');
         header('Content-Type: application/json');
         echo json_encode( $arrData );
         exit;
@@ -62,7 +63,7 @@ class DeliveryController extends Controller {
         $objTemplate = new \FrontendTemplate( 'js_delivery' );
         $objTemplate->setData( $arrDelivery );
 
-        header("Access-Control-Allow-Origin: *");
+        header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/javascript');
         echo $objTemplate->parse();
         exit;
