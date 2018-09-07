@@ -43,10 +43,11 @@ class DeliveryController extends Controller {
             $arrData['template'] = $objTemplate->parse();
         }
 
+        header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Headers: *');
-        header('Content-Type: application/json');
-        echo json_encode( $arrData );
+
+        echo json_encode( $arrData, 512 );
         exit;
     }
 
@@ -65,6 +66,7 @@ class DeliveryController extends Controller {
 
         header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/javascript');
+
         echo $objTemplate->parse();
         exit;
     }
