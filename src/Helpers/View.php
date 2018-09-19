@@ -143,6 +143,14 @@ class View {
     }
 
 
+    public function getCount() {
+
+        $objSQLBuilder = new SQLQueryBuilder();
+
+        return $objSQLBuilder->execute( $this->arrQuery )->numRows;
+    }
+
+
     public function getPagination() {
 
         $objSQLBuilder = new SQLQueryBuilder();

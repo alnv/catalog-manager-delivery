@@ -53,6 +53,31 @@ class DeliveryController extends Controller {
 
     /**
      *
+     * @Route("/count/{alias}", name="count")
+     * @Method({"GET"})
+     */
+    public function count( $alias ) {
+
+        $this->container->get( 'contao.framework' )->initialize();
+
+        $arrDelivery = Help::getDelivery( $alias );
+        $objView = new View( $arrDelivery );
+
+        $arrData = [
+
+            'count' => $objView->getCount()
+        ];
+
+        header('Content-Type: application/json');
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: *');
+
+        echo json_encode( $arrData, 512 );
+        exit;
+    }
+
+    /**
+     *
      * @Route("/js/{alias}.js", name="javascript")
      * @Method({"GET"})
      */
