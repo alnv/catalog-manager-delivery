@@ -26,6 +26,14 @@ class DeliveryController extends Controller {
 
         $this->container->get( 'contao.framework' )->initialize();
 
+        global $objPage;
+
+        if ( $objPage == null ) {
+
+            $objPage = new \stdClass();
+            $objPage->language = $GLOBALS['TL_LANGUAGE'];
+        }
+
         define( 'TL_ASSETS_URL', '' );
         define( 'TL_FILES_URL', '' );
 
