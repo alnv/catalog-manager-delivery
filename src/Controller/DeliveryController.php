@@ -26,6 +26,9 @@ class DeliveryController extends Controller {
 
         $this->container->get( 'contao.framework' )->initialize();
 
+        define( 'TL_ASSETS_URL', '' );
+        define( 'TL_FILES_URL', '' );
+
         $arrData = [];
         $arrDelivery = Help::getDelivery( $alias );
         $objView = new View( $arrDelivery );
