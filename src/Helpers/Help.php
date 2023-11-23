@@ -5,14 +5,15 @@ namespace CatalogManager\DeliveryBundle\Helpers;
 use CatalogManager\CatalogFieldBuilder as CatalogFieldBuilder;
 use CatalogManager\Toolkit as Toolkit;
 
+class Help
+{
 
-class Help {
 
+    public static function parseDelivery($arrDelivery)
+    {
 
-    public static function parseDelivery( $arrDelivery ) {
-
-        $arrMatch = \StringUtil::deserialize( $arrDelivery['match'], true );
-        $arrQuery =  Toolkit::parseQueries( $arrMatch['query'] );
+        $arrMatch = \StringUtil::deserialize($arrDelivery['match'], true);
+        $arrQuery = Toolkit::parseQueries($arrMatch['query']);
 
         $arrReturn = [
 
@@ -23,14 +24,14 @@ class Help {
             'alias' => $arrDelivery['alias'],
             'target' => $arrDelivery['target'],
             'template' => $arrDelivery['template'],
-            'perPage' => (int) $arrDelivery['perPage'],
-            'order' => \StringUtil::deserialize( $arrDelivery['order'], true ),
-            'globals' => \StringUtil::deserialize( $arrDelivery['globals'], true )
+            'perPage' => (int)$arrDelivery['perPage'],
+            'order' => \StringUtil::deserialize($arrDelivery['order'], true),
+            'globals' => \StringUtil::deserialize($arrDelivery['globals'], true)
         ];
 
         $objCatalogFieldBuilder = new CatalogFieldBuilder();
-        $objCatalogFieldBuilder->initialize( $arrReturn['table'] );
-        $arrFields = $objCatalogFieldBuilder->getCatalogFields( true, null );
+        $objCatalogFieldBuilder->initialize($arrReturn['table']);
+        $arrFields = $objCatalogFieldBuilder->getCatalogFields(true, null);
 
         $arrReturn['catalog'] = $objCatalogFieldBuilder->getCatalog();
         $arrReturn['fields'] = $arrFields;
@@ -39,16 +40,17 @@ class Help {
     }
 
 
-    public static function getDelivery( $alias ) {
+    public static function getDelivery($alias)
+    {
 
         $objDatabase = \Database::getInstance();
-        $objDelivery = $objDatabase->prepare( 'SELECT * FROM tl_deliveries WHERE alias = ? OR id = ?' )->execute( $alias, (int) $alias );
+        $objDelivery = $objDatabase->prepare('SELECT * FROM tl_deliveries WHERE alias = ? OR id = ?')->execute($alias, (int)$alias);
 
-        if ( !$objDelivery->numRows ) {
+        if (!$objDelivery->numRows) {
 
-            throw new \CoreBundle\Exception\PageNotFoundException( 'Page not found: ' . \Environment::get('uri') );
+            throw new \CoreBundle\Exception\PageNotFoundException('Page not found: ' . \Environment::get('uri'));
         }
 
-        return static::parseDelivery( $objDelivery->row() );
+        return static::parseDelivery($objDelivery->row());
     }
 }

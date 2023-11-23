@@ -2,26 +2,25 @@
 
 namespace CatalogManager\DeliveryBundle\Controller;
 
+use CatalogManager\DeliveryBundle\Helpers\Help as Help;
+use CatalogManager\DeliveryBundle\Helpers\View as View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
-use CatalogManager\DeliveryBundle\Helpers\Help as Help;
-use CatalogManager\DeliveryBundle\Helpers\View as View;
 
 /**
  *
  * @Route("/delivery-api", defaults={"_scope" = "frontend", "_token_check" = false})
  */
-class DeliveryController extends \Contao\CoreBundle\Controller\AbstractController {
-
+class DeliveryController extends \Contao\CoreBundle\Controller\AbstractController
+{
 
     /**
      *
-     * @Route("/{alias}", name="delivery")
-     * @Method({"GET"})
+     * @Route("/{alias}", methods={"GET"}, name="delivery")
      */
-    public function delivery($alias) {
+    public function delivery($alias)
+    {
 
         $this->container->get('contao.framework')->initialize();
 
@@ -63,10 +62,10 @@ class DeliveryController extends \Contao\CoreBundle\Controller\AbstractControlle
 
     /**
      *
-     * @Route("/count/{alias}", name="count")
-     * @Method({"GET"})
+     * @Route("/count/{alias}", methods={"GET"}, name="count")
      */
-    public function count($alias) {
+    public function count($alias)
+    {
 
         $this->container->get('contao.framework')->initialize();
 
@@ -90,10 +89,10 @@ class DeliveryController extends \Contao\CoreBundle\Controller\AbstractControlle
 
     /**
      *
-     * @Route("/js/{alias}.js", name="javascript")
-     * @Method({"GET"})
+     * @Route("/js/{alias}.js", methods={"GET"}, name="javascript")
      */
-    public function javascript($alias) {
+    public function javascript($alias)
+    {
 
         $this->container->get('contao.framework')->initialize();
 

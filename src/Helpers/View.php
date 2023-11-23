@@ -6,16 +6,16 @@ namespace CatalogManager\DeliveryBundle\Helpers;
 use CatalogManager\SQLQueryBuilder as SQLQueryBuilder;
 use CatalogManager\Toolkit as Toolkit;
 
-
-class View {
-
+class View
+{
 
     protected $intPerPage = 5;
     protected $arrFields = [];
     protected $arrQuery = [];
 
 
-    public function __construct( $arrDelivery ) {
+    public function __construct($arrDelivery)
+    {
 
         $this->arrFields = $arrDelivery['fields'];
         $this->intPerPage = $arrDelivery['perPage'];
@@ -27,12 +27,12 @@ class View {
             'where' => []
         ];
 
-        if ( is_array( $arrDelivery['match'] ) && !empty( $arrDelivery['match'] ) ) {
+        if (is_array($arrDelivery['match']) && !empty($arrDelivery['match'])) {
 
             $this->arrQuery['where'] = $arrDelivery['match'];
         }
 
-        if ( in_array( 'invisible', $arrDelivery['catalog']['operations'] ) ) {
+        if (in_array('invisible', $arrDelivery['catalog']['operations'])) {
 
             $dteTime = \Date::floorToMinute();
 
@@ -81,9 +81,9 @@ class View {
             ];
         }
 
-        if ( is_array( $arrDelivery['order'] ) && !empty( $arrDelivery['order'] ) ) {
+        if (is_array($arrDelivery['order']) && !empty($arrDelivery['order'])) {
 
-            foreach ( $arrDelivery['order'] as $arrOrder ) {
+            foreach ($arrDelivery['order'] as $arrOrder) {
 
                 $this->arrQuery['orderBy'][] = [
 
@@ -95,27 +95,28 @@ class View {
     }
 
 
-    public function getView() {
+    public function getView()
+    {
 
         $arrReturn = [];
         $objSQLBuilder = new SQLQueryBuilder();
-        $objTotal = $objSQLBuilder->execute( $this->arrQuery );
+        $objTotal = $objSQLBuilder->execute($this->arrQuery);
 
         $intTotal = $objTotal->numRows;
         $intLimit = $intTotal;
         $intOffset = 0;
 
-        if ( $this->intPerPage > 0 ) {
+        if ($this->intPerPage > 0) {
 
-            $intPage = ( \Input::get( '_page' ) !== null ) ? \Input::get( _page ) : 1;
+            $intPage = (\Input::get('_page') !== null) ? \Input::get(_page) : 1;
 
-            if ( $intPage < 1 || $intPage > max( ceil( $intTotal / $this->intPerPage ), 1 ) ) {
+            if ($intPage < 1 || $intPage > max(ceil($intTotal / $this->intPerPage), 1)) {
 
-                throw new \CoreBundle\Exception\PageNotFoundException( 'Page not found: ' . \Environment::get('uri') );
+                throw new \CoreBundle\Exception\PageNotFoundException('Page not found: ' . \Environment::get('uri'));
             }
 
-            $intOffset = ( $intPage - 1 ) * $this->intPerPage;
-            $intLimit = min( $this->intPerPage + $intOffset, $intTotal );
+            $intOffset = ($intPage - 1) * $this->intPerPage;
+            $intLimit = min($this->intPerPage + $intOffset, $intTotal);
         }
 
         $this->arrQuery['pagination'] = [
@@ -124,17 +125,17 @@ class View {
             'offset' => $intOffset
         ];
 
-        $objEntities = $objSQLBuilder->execute( $this->arrQuery );
+        $objEntities = $objSQLBuilder->execute($this->arrQuery);
 
-        if ( !$objEntities->numRows ) {
+        if (!$objEntities->numRows) {
 
             return $arrReturn;
         }
 
-        while ( $objEntities->next() ) {
+        while ($objEntities->next()) {
 
             $arrEntity = $objEntities->row();
-            $arrEntity = Toolkit::parseCatalogValues( $arrEntity, $this->arrFields );
+            $arrEntity = Toolkit::parseCatalogValues($arrEntity, $this->arrFields);
 
             $arrReturn[] = $arrEntity;
         }
@@ -143,31 +144,33 @@ class View {
     }
 
 
-    public function getCount() {
+    public function getCount()
+    {
 
         $objSQLBuilder = new SQLQueryBuilder();
 
-        return $objSQLBuilder->execute( $this->arrQuery )->numRows;
+        return $objSQLBuilder->execute($this->arrQuery)->numRows;
     }
 
 
-    public function getPagination() {
+    public function getPagination()
+    {
 
         $objSQLBuilder = new SQLQueryBuilder();
-        $objTotal = $objSQLBuilder->execute( $this->arrQuery );
+        $objTotal = $objSQLBuilder->execute($this->arrQuery);
 
         $intTotal = $objTotal->numRows;
         $intLimit = $intTotal;
         $intOffset = 0;
 
-        if ( $this->intPerPage > 0 ) {
+        if ($this->intPerPage > 0) {
 
-            $objTemplate = new \FrontendTemplate( 'pagination_delivery' );
-            $intPage = ( \Input::get( '_page' ) !== null ) ? \Input::get( _page ) : 1;
-            $intOffset = ( $intPage - 1 ) * $this->intPerPage;
-            $intLimit = min( $this->intPerPage + $intOffset, $intTotal );
+            $objTemplate = new \FrontendTemplate('pagination_delivery');
+            $intPage = (\Input::get('_page') !== null) ? \Input::get(_page) : 1;
+            $intOffset = ($intPage - 1) * $this->intPerPage;
+            $intLimit = min($this->intPerPage + $intOffset, $intTotal);
 
-            $objPagination = new \Pagination( $intTotal, $this->intPerPage, \Config::get( 'maxPaginationLinks' ), '_page', $objTemplate, true );
+            $objPagination = new \Pagination($intTotal, $this->intPerPage, \Config::get('maxPaginationLinks'), '_page', $objTemplate, true);
 
             return $objPagination->generate();
         }

@@ -6,78 +6,83 @@ use CatalogManager\CatalogFieldBuilder as CatalogFieldBuilder;
 use CatalogManager\Toolkit as Toolkit;
 
 
-class Deliveries {
+class Deliveries
+{
 
-
-    public function getTables() {
+    public function getTables()
+    {
 
         $arrReturn = [];
         $objDatabase = \Database::getInstance();
         $objCatalog = $objDatabase->prepare('SELECT * FROM tl_catalog ORDER BY name')->execute();
 
-        if ( !$objCatalog->numRows ) {
+        if (!$objCatalog->numRows) {
 
             return $arrReturn;
         }
 
-        while ( $objCatalog->next() ) {
+        while ($objCatalog->next()) {
 
-            $arrReturn[ $objCatalog->tablename ] = $objCatalog->name;
+            $arrReturn[$objCatalog->tablename] = $objCatalog->name;
         }
 
         return $arrReturn;
     }
 
 
-    public function getTemplates() {
+    public function getTemplates()
+    {
 
-        return \Controller::getTemplateGroup( 'delivery_' );
+        return \Controller::getTemplateGroup('delivery_');
     }
 
 
-    public function getTable( \DataContainer $dc ) {
+    public function getTable(\DataContainer $dc)
+    {
 
         return $dc->activeRecord->table ? $dc->activeRecord->table : '';
     }
 
 
-    public function getFields( \DataContainer $objDataContainer = null, $strTable ) {
+    public function getFields(\DataContainer $objDataContainer = null, $strTable)
+    {
 
         $arrReturn = [];
         $objDatabase = \Database::getInstance();
-        $arrForbiddenTypes = [ 'upload', 'textarea' ];
+        $arrForbiddenTypes = ['upload', 'textarea'];
 
-        if ( !$strTable ) return $arrReturn;
+        if (!$strTable) return $arrReturn;
 
         $objCatalogFieldBuilder = new CatalogFieldBuilder();
-        $objCatalogFieldBuilder->initialize( $strTable );
-        $arrFields = $objCatalogFieldBuilder->getCatalogFields( true, null );
+        $objCatalogFieldBuilder->initialize($strTable);
+        $arrFields = $objCatalogFieldBuilder->getCatalogFields(true, null);
 
-        foreach ( $arrFields as $strFieldname => $arrField ) {
+        foreach ($arrFields as $strFieldname => $arrField) {
 
-            if ( !$objDatabase->fieldExists( $strFieldname, $strTable ) ) continue;
-            if ( in_array( $arrField['type'], Toolkit::excludeFromDc() ) ) continue;
-            if ( in_array( $arrField['type'], $arrForbiddenTypes ) ) continue;
+            if (!$objDatabase->fieldExists($strFieldname, $strTable)) continue;
+            if (in_array($arrField['type'], Toolkit::excludeFromDc())) continue;
+            if (in_array($arrField['type'], $arrForbiddenTypes)) continue;
 
-            $arrReturn[ $strFieldname ] = $arrField['_dcFormat'];
+            $arrReturn[$strFieldname] = $arrField['_dcFormat'];
         }
 
         return $arrReturn;
     }
 
 
-    public function getSortableFields( $objWidget ) {
+    public function getSortableFields($objWidget)
+    {
 
         $arrReturn = [];
         $objDatabase = \Database::getInstance();
-        $objModule = $objDatabase->prepare( sprintf( 'SELECT * FROM %s WHERE id = ?', $objWidget->strTable ) )->limit(1)->execute( $objWidget->currentRecord );
-        $arrFields = $this->getFields( null, $objModule->table );
+        $objModule = $objDatabase->prepare(sprintf('SELECT * FROM %s WHERE id = ?', $objWidget->strTable))->limit(1)->execute($objWidget->currentRecord);
+        $arrFields = $this->getFields(null, $objModule->table);
 
-        if ( is_array( $arrFields ) && !empty( $arrFields ) ) {
+        if (is_array($arrFields) && !empty($arrFields)) {
 
-            foreach ( $arrFields as $strFieldname => $arrField ) {
+            foreach ($arrFields as $strFieldname => $arrField) {
 
-                $arrReturn[ $strFieldname ] = isset( $arrField['label'][0] ) ? $arrField['label'][0] : $strFieldname;
+                $arrReturn[$strFieldname] = isset($arrField['label'][0]) ? $arrField['label'][0] : $strFieldname;
             }
         }
 
@@ -85,29 +90,31 @@ class Deliveries {
     }
 
 
-    public function getOrderItems() {
+    public function getOrderItems()
+    {
 
-        return [ 'ASC' => &$GLOBALS['TL_LANG']['MSC']['CATALOG_MANAGER']['asc'], 'DESC' => &$GLOBALS['TL_LANG']['MSC']['CATALOG_MANAGER']['desc'] ];
+        return ['ASC' => &$GLOBALS['TL_LANG']['MSC']['CATALOG_MANAGER']['asc'], 'DESC' => &$GLOBALS['TL_LANG']['MSC']['CATALOG_MANAGER']['desc']];
     }
 
 
-    public function generateAlias( $strValue, \DataContainer $objDataContainer ) {
+    public function generateAlias($strValue, \DataContainer $objDataContainer)
+    {
 
         $blnAutoAlias = false;
         $objDatabase = \Database::getInstance();
 
-        if ( $strValue == '' ) {
+        if ($strValue == '') {
 
-            $strValue = \System::getContainer()->get( 'contao.slug.generator' )->generate( \StringUtil::prepareSlug( $objDataContainer->activeRecord->name ) );
+            $strValue = \System::getContainer()->get('contao.slug.generator')->generate(\StringUtil::prepareSlug($objDataContainer->activeRecord->name));
         }
 
-        $objAlias = $objDatabase->prepare( "SELECT id FROM tl_deliveries WHERE alias = ? AND id != ?" )->execute( $strValue, $objDataContainer->id );
+        $objAlias = $objDatabase->prepare("SELECT id FROM tl_deliveries WHERE alias = ? AND id != ?")->execute($strValue, $objDataContainer->id);
 
-        if ( $objAlias->numRows ) {
+        if ($objAlias->numRows) {
 
-            if ( !$blnAutoAlias ) {
+            if (!$blnAutoAlias) {
 
-                throw new \Exception( sprintf( $GLOBALS['TL_LANG']['ERR']['aliasExists'], $strValue ) );
+                throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $strValue));
             }
 
             $strValue .= '-' . $objDataContainer->id;
