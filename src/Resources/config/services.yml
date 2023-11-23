@@ -2,6 +2,10 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+
+    CatalogManager\DeliveryBundle\Controller\DeliveryController:
+        public: true
+
     delivery.datacontainer.deliveries:
         class: CatalogManager\DeliveryBundle\DataContainer\Deliveries
         public: true

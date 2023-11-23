@@ -7,12 +7,13 @@ use CatalogManager\DeliveryBundle\Helpers\View as View;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Contao\CoreBundle\Controller\AbstractController;
 
 /**
  *
  * @Route("/delivery-api", defaults={"_scope" = "frontend", "_token_check" = false})
  */
-class DeliveryController extends \Contao\CoreBundle\Controller\AbstractController
+class DeliveryController extends AbstractController
 {
 
     /**
