@@ -4,6 +4,7 @@ namespace CatalogManager\DeliveryBundle\Helpers;
 
 use Alnv\CatalogManagerBundle\CatalogFieldBuilder as CatalogFieldBuilder;
 use Alnv\CatalogManagerBundle\Toolkit as Toolkit;
+use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\StringUtil;
 use Contao\Database;
 use Contao\Environment;
@@ -45,7 +46,7 @@ class Help
         $objDelivery = $objDatabase->prepare('SELECT * FROM tl_deliveries WHERE alias = ? OR id = ?')->execute($alias, (int)$alias);
 
         if (!$objDelivery->numRows) {
-            throw new \CoreBundle\Exception\PageNotFoundException('Page not found: ' . Environment::get('uri'));
+            throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
         }
 
         return static::parseDelivery($objDelivery->row());
