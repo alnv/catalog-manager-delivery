@@ -2,21 +2,20 @@
 
 namespace CatalogManager\DeliveryBundle\Helpers;
 
-use CatalogManager\CatalogFieldBuilder as CatalogFieldBuilder;
-use CatalogManager\Toolkit as Toolkit;
+use Alnv\CatalogManagerBundle\CatalogFieldBuilder as CatalogFieldBuilder;
+use Alnv\CatalogManagerBundle\Toolkit as Toolkit;
+use Contao\StringUtil;
+use Contao\Database;
+use Contao\Environment;
 
 class Help
 {
-
-
     public static function parseDelivery($arrDelivery)
     {
-
-        $arrMatch = \StringUtil::deserialize($arrDelivery['match'], true);
+        $arrMatch = StringUtil::deserialize($arrDelivery['match'], true);
         $arrQuery = Toolkit::parseQueries($arrMatch['query']);
 
         $arrReturn = [
-
             'match' => $arrQuery,
             'name' => $arrDelivery['name'],
             'type' => $arrDelivery['return'],
@@ -25,8 +24,8 @@ class Help
             'target' => $arrDelivery['target'],
             'template' => $arrDelivery['template'],
             'perPage' => (int)$arrDelivery['perPage'],
-            'order' => \StringUtil::deserialize($arrDelivery['order'], true),
-            'globals' => \StringUtil::deserialize($arrDelivery['globals'], true)
+            'order' => StringUtil::deserialize($arrDelivery['order'], true),
+            'globals' => StringUtil::deserialize($arrDelivery['globals'], true)
         ];
 
         $objCatalogFieldBuilder = new CatalogFieldBuilder();
@@ -42,13 +41,11 @@ class Help
 
     public static function getDelivery($alias)
     {
-
-        $objDatabase = \Database::getInstance();
+        $objDatabase = Database::getInstance();
         $objDelivery = $objDatabase->prepare('SELECT * FROM tl_deliveries WHERE alias = ? OR id = ?')->execute($alias, (int)$alias);
 
         if (!$objDelivery->numRows) {
-
-            throw new \CoreBundle\Exception\PageNotFoundException('Page not found: ' . \Environment::get('uri'));
+            throw new \CoreBundle\Exception\PageNotFoundException('Page not found: ' . Environment::get('uri'));
         }
 
         return static::parseDelivery($objDelivery->row());

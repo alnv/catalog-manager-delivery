@@ -2,27 +2,20 @@
 
 namespace CatalogManager\DeliveryBundle\Controller;
 
+use Contao\FrontendTemplate;
 use CatalogManager\DeliveryBundle\Helpers\Help as Help;
 use CatalogManager\DeliveryBundle\Helpers\View as View;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Routing\Annotation\Route;
 use Contao\CoreBundle\Controller\AbstractController;
 
-/**
- *
- * @Route("/delivery-api", defaults={"_scope" = "frontend", "_token_check" = false})
- */
+#[Route(path: 'delivery-api', name: 'delivery-api-controller', defaults: ['_scope' => 'frontend', '_token_check' => false])]
 class DeliveryController extends AbstractController
 {
 
-    /**
-     *
-     * @Route("/{alias}", methods={"GET"}, name="delivery")
-     */
-    public function delivery($alias)
+    #[Route(path: '/{alias}', methods: ["GET"])]
+    public function delivery($alias): JsonResponse
     {
-
         $this->container->get('contao.framework')->initialize();
 
         global $objPage;
@@ -45,7 +38,7 @@ class DeliveryController extends AbstractController
 
         if ($arrDelivery['type'] == 'template') {
             $strTemplate = $arrDelivery['template'] ?: 'delivery_example';
-            $objTemplate = new \FrontendTemplate($strTemplate);
+            $objTemplate = new FrontendTemplate($strTemplate);
             $objTemplate->setData($arrData);
 
             $arrData['template'] = $objTemplate->parse();
@@ -54,20 +47,13 @@ class DeliveryController extends AbstractController
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Headers: *');
-        /*
-        echo json_encode( $arrData, 512 );
-        exit;
-        */
+
         return new JsonResponse($arrData);
     }
 
-    /**
-     *
-     * @Route("/count/{alias}", methods={"GET"}, name="count")
-     */
+    #[Route(path: '/count/{alias}', methods: ["GET"])]
     public function count($alias)
     {
-
         $this->container->get('contao.framework')->initialize();
 
         $arrDelivery = Help::getDelivery($alias);
@@ -81,24 +67,16 @@ class DeliveryController extends AbstractController
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Headers: *');
 
-        /*
-        echo json_encode( $arrData, 512 );
-        exit;
-        */
         return new JsonResponse($arrData);
     }
 
-    /**
-     *
-     * @Route("/js/{alias}.js", methods={"GET"}, name="javascript")
-     */
+    #[Route(path: '/js/{alias}.JS', methods: ["GET"])]
     public function javascript($alias)
     {
-
         $this->container->get('contao.framework')->initialize();
 
         $arrDelivery = Help::getDelivery($alias);
-        $objTemplate = new \FrontendTemplate('js_delivery');
+        $objTemplate = new FrontendTemplate('js_delivery');
         $objTemplate->setData($arrDelivery);
 
         header('Access-Control-Allow-Origin: *');

@@ -2,53 +2,47 @@
 
 namespace CatalogManager\DeliveryBundle\DataContainer;
 
-use CatalogManager\CatalogFieldBuilder as CatalogFieldBuilder;
-use CatalogManager\Toolkit as Toolkit;
-
+use Alnv\CatalogManagerBundle\CatalogFieldBuilder as CatalogFieldBuilder;
+use Alnv\CatalogManagerBundle\Toolkit as Toolkit;
+use Contao\Database;
+use Contao\Controller;
+use Contao\DataContainer;
+use Contao\StringUtil;
+use Contao\System;
 
 class Deliveries
 {
-
-    public function getTables()
+    public function getTables(): array
     {
-
         $arrReturn = [];
-        $objDatabase = \Database::getInstance();
+        $objDatabase = Database::getInstance();
         $objCatalog = $objDatabase->prepare('SELECT * FROM tl_catalog ORDER BY name')->execute();
 
         if (!$objCatalog->numRows) {
-
             return $arrReturn;
         }
 
         while ($objCatalog->next()) {
-
             $arrReturn[$objCatalog->tablename] = $objCatalog->name;
         }
 
         return $arrReturn;
     }
 
-
     public function getTemplates()
     {
-
-        return \Controller::getTemplateGroup('delivery_');
+        return Controller::getTemplateGroup('delivery_');
     }
 
-
-    public function getTable(\DataContainer $dc)
+    public function getTable(DataContainer $dc)
     {
-
         return $dc->activeRecord->table ? $dc->activeRecord->table : '';
     }
 
-
-    public function getFields(\DataContainer $objDataContainer = null, $strTable)
+    public function getFields(DataContainer $objDataContainer = null, $strTable)
     {
-
         $arrReturn = [];
-        $objDatabase = \Database::getInstance();
+        $objDatabase = Database::getInstance();
         $arrForbiddenTypes = ['upload', 'textarea'];
 
         if (!$strTable) return $arrReturn;
@@ -69,19 +63,15 @@ class Deliveries
         return $arrReturn;
     }
 
-
-    public function getSortableFields($objWidget)
+    public function getSortableFields($objWidget): array
     {
-
         $arrReturn = [];
-        $objDatabase = \Database::getInstance();
+        $objDatabase = Database::getInstance();
         $objModule = $objDatabase->prepare(sprintf('SELECT * FROM %s WHERE id = ?', $objWidget->strTable))->limit(1)->execute($objWidget->currentRecord);
         $arrFields = $this->getFields(null, $objModule->table);
 
         if (is_array($arrFields) && !empty($arrFields)) {
-
             foreach ($arrFields as $strFieldname => $arrField) {
-
                 $arrReturn[$strFieldname] = isset($arrField['label'][0]) ? $arrField['label'][0] : $strFieldname;
             }
         }
@@ -89,34 +79,21 @@ class Deliveries
         return $arrReturn;
     }
 
-
-    public function getOrderItems()
+    public function getOrderItems(): array
     {
-
         return ['ASC' => &$GLOBALS['TL_LANG']['MSC']['CATALOG_MANAGER']['asc'], 'DESC' => &$GLOBALS['TL_LANG']['MSC']['CATALOG_MANAGER']['desc']];
     }
 
-
-    public function generateAlias($strValue, \DataContainer $objDataContainer)
+    public function generateAlias($strValue, DataContainer $objDataContainer)
     {
-
-        $blnAutoAlias = false;
-        $objDatabase = \Database::getInstance();
+        $objDatabase = Database::getInstance();
 
         if ($strValue == '') {
-
-            $strValue = \System::getContainer()->get('contao.slug.generator')->generate(\StringUtil::prepareSlug($objDataContainer->activeRecord->name));
+            $strValue = System::getContainer()->get('contao.slug.generator')->generate(StringUtil::prepareSlug($objDataContainer->activeRecord->name));
         }
 
         $objAlias = $objDatabase->prepare("SELECT id FROM tl_deliveries WHERE alias = ? AND id != ?")->execute($strValue, $objDataContainer->id);
-
         if ($objAlias->numRows) {
-
-            if (!$blnAutoAlias) {
-
-                throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $strValue));
-            }
-
             $strValue .= '-' . $objDataContainer->id;
         }
 

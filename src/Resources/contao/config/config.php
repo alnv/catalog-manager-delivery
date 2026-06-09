@@ -1,6 +1,8 @@
 <?php
 
-array_insert( $GLOBALS['BE_MOD']['catalog-manager-extensions'], 1, [
+use Contao\ArrayUtil;
+
+ArrayUtil::arrayInsert($GLOBALS['BE_MOD']['catalog-manager-extensions'], 1, [
     'delivery' => [
         'name' => 'delivery',
         'tables' => [
