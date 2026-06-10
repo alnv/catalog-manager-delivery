@@ -22,7 +22,7 @@ class DeliveryController extends AbstractController
 
         if ($objPage == null) {
             $objPage = new \stdClass();
-            $objPage->language = $GLOBALS['TL_LANGUAGE'];
+            $objPage->language = $GLOBALS['TL_LANGUAGE'] ?? 'de';
         }
 
         define('TL_ASSETS_URL', '');
@@ -70,7 +70,7 @@ class DeliveryController extends AbstractController
         return new JsonResponse($arrData);
     }
 
-    #[Route(path: '/js/{alias}.JS', methods: ["GET"])]
+    #[Route(path: '/js/{alias}.js', methods: ["GET"])]
     public function javascript($alias)
     {
         $this->container->get('contao.framework')->initialize();
